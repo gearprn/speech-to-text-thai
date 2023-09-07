@@ -11,10 +11,9 @@ const grammar = `#JSGF V1.0; grammar colors; public <color> = ${words.join(
 )};`
 
 const recognition = new SpeechRecognition()
-const speechRecognitionList = new SpeechGrammarList()
-speechRecognitionList.addFromString(grammar, 1)
-
-recognition.grammars = speechRecognitionList
+// const speechRecognitionList = new SpeechGrammarList()
+// speechRecognitionList.addFromString(grammar, 1)
+// recognition.grammars = speechRecognitionList
 recognition.continuous = false
 recognition.lang = 'th-TH'
 recognition.interimResults = false
@@ -38,12 +37,15 @@ recognition.onresult = (event) => {
 
 recognition.onspeechend = () => {
   recognition.stop()
+  console.log('Stop.')
 }
 
 recognition.onnomatch = (event) => {
-  diagnostic.textContent = "I didn't recognize that word."
+  diagnostic.textContent = `I didn't recognize that word.`
+  console.log(`I didn't recognize that word.`)
 }
 
 recognition.onerror = (event) => {
   diagnostic.textContent = `Error occurred in recognition: ${event.error}`
+  console.log(`Error occurred in recognition: ${event.error}`)
 }
