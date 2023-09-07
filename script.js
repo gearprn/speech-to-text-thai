@@ -1,3 +1,11 @@
+// ask permission first
+navigator.mediaDevices
+  .getUserMedia({ video: false, audio: true })
+  .then((stream) => {})
+  .catch((err) => {
+    console.error(`you got an error: ${err}`)
+  })
+
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition
 const SpeechGrammarList =
