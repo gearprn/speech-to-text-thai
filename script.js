@@ -11,12 +11,18 @@ const grammar = `#JSGF V1.0; grammar colors; public <color> = ${words.join(
 )};`
 
 const recognition = new SpeechRecognition()
-// const speechRecognitionList = new SpeechGrammarList()
-// speechRecognitionList.addFromString(grammar, 1)
-// recognition.grammars = speechRecognitionList
+
+try {
+  const speechRecognitionList = new SpeechGrammarList()
+  speechRecognitionList.addFromString(grammar, 1)
+  recognition.grammars = speechRecognitionList
+} catch (error) {
+  console.warn(`SpeechGrammarList is not supported on browser: ${error}`)
+}
+
 recognition.continuous = false
 recognition.lang = 'th-TH'
-recognition.interimResults = false
+recognition.interimResults = true
 recognition.maxAlternatives = 1
 
 const startBtn = document.getElementById('start-btn')
@@ -25,14 +31,14 @@ const confidence = document.querySelector('.confidence')
 
 startBtn.onclick = () => {
   recognition.start()
-  console.log('Ready to receive a color command.')
+  console.log('Ready to receive a word.')
 }
 
 recognition.onresult = (event) => {
   const word = event.results[0][0].transcript
   diagnostic.textContent = `Result received: ${word}.`
   confidence.textContent = `Confidence: ${event.results[0][0].confidence}.`
-  console.log(`Confidence: ${event.results[0][0].confidence}`)
+  recognition.stop()
 }
 
 recognition.onspeechend = () => {
@@ -48,4 +54,12 @@ recognition.onnomatch = (event) => {
 recognition.onerror = (event) => {
   diagnostic.textContent = `Error occurred in recognition: ${event.error}`
   console.log(`Error occurred in recognition: ${event.error}`)
+}
+
+recognition.onsoundstart = (event) => {
+  console.log(event)
+}
+
+recognition.onaudioend = (event) => {
+  console.log(event)
 }
